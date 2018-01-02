@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import urlparse
+import urllib.parse
 import socket
 import datetime
 from scrapy.http import Request

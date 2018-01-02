@@ -83,3 +83,10 @@ NEWSPIDER_MODULE = 'properties.spiders'
 #HTTPCACHE_DIR='httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+ITEM_PIPELINES = {'scrapyapperyio.ApperyIoPipeline': 300}
+
+APPERYIO_DB_ID = '<<5a4b80530f0d3121b2b95980>>'
+APPERYIO_USERNAME = 'root'
+APPERYIO_PASSWORD = 'pass'
+APPERYIO_COLLECTION_NAME = 'properties'

@@ -3,18 +3,25 @@ import scrapy
 import urllib.parse
 import socket
 import datetime
+from scrapy.http import Request
 from properties.items import PropertiesItem
 from scrapy.loader.processors import MapCompose, Join
 from scrapy.loader import ItemLoader
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import CrawlSpider, Rule
 
-class BasicSpider(scrapy.Spider):
-    name = "basic"
-    allowed_domains = ["gumtree.com"]
-    start_urls = (
-            'https://www.gumtree.com/p/property-for-sale/4-5-bedroom-house-for-sale-in-ardersier-/1280668353',
+
+
+class EasySpider(CrawlSpider):
+    name = 'tomobile'
+    allowed_domains = ['scrapybook.s3.amazonaws.com']
+    start_urls = ('https://scrapybook.s3.amazonaws.com/properties/index_00000.html',)
+
+    rules = (
+            Rule(LinkExtractor(restrict_xpaths='//*[@class="pagination-next"]')), Rule(LinkExtractor(restrict_xpaths='//a[@class="listing-link"]'), callback='parse_item')
     )
 
-    def parse(self, response):
+    def parse_item(self, response):
         l = ItemLoader(item=PropertiesItem(), response=response)
         
         l.add_xpath('title', '//h1[@id="ad-title"]/text()', MapCompose(unicode.strip, unicode.title))
@@ -30,11 +37,3 @@ class BasicSpider(scrapy.Spider):
         l.add_value('date', datetime.datetime.now())
 
         return l.load_item()
-    
-#        item = PropertiesItem()
-#        item['title'] =  response.xpath('//h1[@id="ad-title"]/text()').extract()
-#        item['price'] = response.xpath('//strong[contains(@class, "ad-price")]/text()').extract()[0].strip()
-#        item['description'] = response.xpath('//p[@class="ad-description"][1]/text()').extract()
-#        item['address'] = response.xpath('//span[@itemprop="address"]/text()').extract()
-#        item['image_urls'] = response.xpath('/descendant::img[@itemprop="image"][1]/@src').extract()
-#        return item
